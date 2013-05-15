@@ -77,6 +77,9 @@ if (!empty($this->item->attribs['show_urls_images_backend']))
 					<fieldset class="adminform">
 						<div class="control-group form-inline">
 							<?php echo $this->form->getLabel('title'); ?> <?php echo $this->form->getInput('title'); ?> <?php echo $this->form->getLabel('catid'); ?> <?php echo $this->form->getInput('catid'); ?>
+							<?php if ($params['save_history']) : ?>
+								<?php echo $this->form->getLabel('contenthistory'); ?> <?php echo $this->form->getInput('contenthistory'); ?>
+							<?php endif; ?>
 						</div>
 						<?php echo $this->form->getInput('articletext'); ?>
 					</fieldset>
@@ -213,11 +216,11 @@ if (!empty($this->item->attribs['show_urls_images_backend']))
 					<?php if ($params['show_article_options'] || (( $params['show_article_options'] == '' && !empty($editoroptions) ))) : ?>
 						<?php $fieldSets = $this->form->getFieldsets('attribs'); ?>
 						<?php foreach ($fieldSets as $name => $fieldSet) : ?>
-							
+
 							<?php if ($name != 'editorConfig' && $name != 'basic-limited') : ?>
 								<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'attrib-' . $name, JText::_($fieldSet->label, true)); ?>
 							<?php endif; ?>
-							
+
 							<?php // If the parameter says to show the article options or if the parameters have never been set, we will show the article options.?>
 							<?php if ($params['show_article_options'] || (( $params['show_article_options'] == '' && !empty($editoroptions) ))) : ?>
 								<?php // Go through all the fieldsets except the configuration and basic-limited, which are handled separately below.?>
@@ -240,11 +243,11 @@ if (!empty($this->item->attribs['show_urls_images_backend']))
 									echo $field->input;
 								endforeach;
 							endif;?>
-							
+
 							<?php if ($name != 'editorConfig' && $name != 'basic-limited') : ?>
 								<?php echo JHtml::_('bootstrap.endTab'); ?>
 							<?php endif; ?>
-						
+
 						<?php endforeach; ?>
 					<?php endif; ?>
 

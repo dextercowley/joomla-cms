@@ -252,8 +252,14 @@ class JTableContent extends JTable
 	public function delete($pk = null)
 	{
 		$result = parent::delete($pk);
+		if (JComponentHelper::getParams('com_content')->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory('com_content.article');
+			$result = $result && $contenthistoryHelper->deleteHistory($this);
+		}
 		$this->tagsHelper->typeAlias = 'com_content.article';
 		return $result && $this->tagsHelper->deleteTagData($this, $pk);
+
 	}
 
 	/**
@@ -300,11 +306,17 @@ class JTableContent extends JTable
 			return false;
 		}
 
+		if (JComponentHelper::getParams('com_content')->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory('com_content.article');
+			$result = $contenthistoryHelper->store($this);
+		}
+
 		$this->tagsHelper->typeAlias = 'com_content.article';
 		$this->tagsHelper->preStoreProcess($this);
-		$result = parent::store($updateNulls);
+		$result = parent::store($updateNulls) && $result;
 
-		return $result && $this->tagsHelper->postStoreProcess($this);
+		return $this->tagsHelper->postStoreProcess($this) && $result;
 	}
 
 	/**

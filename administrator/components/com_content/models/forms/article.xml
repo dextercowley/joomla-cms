@@ -13,6 +13,13 @@
 
 		<field name="alias" type="text" label="JFIELD_ALIAS_LABEL"
 			description="JFIELD_ALIAS_DESC" class="inputbox" size="45" labelclass="control-label" />
+			
+		<field name="contenthistory" type="contenthistory"
+			label="JFIELD_VERSION_HISTORY_LABEL" description="JFIELD_VERSION_HISTORY_DESC" 
+			data-typeAlias="com_content.article"/>	
+
+		<field name="version_note" type="text" label="JFIELD_VERSION_NOTE_LABEL"
+			description="JFIELD_VERSION_NOTE_DESC" class="inputbox" size="45" labelclass="control-label" />
 
 		<field name="articletext" type="editor" class="inputbox"
 			label="COM_CONTENT_FIELD_ARTICLETEXT_LABEL" description="COM_CONTENT_FIELD_ARTICLETEXT_DESC"

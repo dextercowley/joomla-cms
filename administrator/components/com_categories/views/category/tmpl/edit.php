@@ -20,6 +20,7 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
+$saveHistory = JComponentHelper::getParams($input->getCmd('extension', 'com_content'))->get('save_history', 0);
 
 ?>
 
@@ -56,6 +57,14 @@ JHtml::_('formbehavior.chosen', 'select');
 						<div class="controls">
 							<?php echo $this->form->getInput('alias'); ?>
 						</div>
+					<?php if ($saveHistory) : ?>
+						<div class="control-label">
+							<?php echo $this->form->getLabel('contenthistory'); ?>
+						</div>
+						<div class="controls">
+							<?php echo $this->form->getInput('contenthistory'); ?>
+						</div>
+					<?php endif; ?>
 					</div>
 					<div class="control-group">
 						<div class="control-label">
@@ -210,6 +219,15 @@ JHtml::_('formbehavior.chosen', 'select');
 						<?php endif; ?>
 					<?php endforeach; ?>
 				</div>
+				<?php if ($saveHistory) : ?>
+					<div class="control-group">
+						<?php echo $this->form->getLabel('version_note'); ?>
+						<div class="controls">
+							<?php echo $this->form->getInput('version_note'); ?>
+						</div>
+					</div>
+				<?php endif; ?>
+
 			</fieldset>
 		</div>
 		<!-- End Sidebar -->

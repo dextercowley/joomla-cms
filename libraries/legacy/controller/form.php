@@ -538,6 +538,72 @@ class JControllerForm extends JControllerLegacy
 	}
 
 	/**
+	 * Method to load a row from version history
+	 *
+	 * @return  mixed  True if the record can be added, a error object if not.
+	 *
+	 * @since   3.2
+	 */
+	public function loadhistory()
+	{
+		$app = JFactory::getApplication();
+		$model = $this->getModel();
+		$table = $model->getTable();
+		$historyId = $app->input->get('version_id', null, 'integer');
+		$context = "$this->option.edit.$this->context";
+
+		if (!$model->loadhistory($historyId, $table))
+		{
+			$this->setMessage($model->getError(), 'error');
+
+			$this->setRedirect(
+					JRoute::_(
+							'index.php?option=' . $this->option . '&view=' . $this->view_list
+							. $this->getRedirectToListAppend(), false
+					)
+			);
+			return false;
+		}
+		// Determine the name of the primary key for the data.
+		if (empty($key))
+		{
+			$key = $table->getKeyName();
+		}
+		$recordId = $table->$key;
+		// To avoid data collisions the urlVar may be different from the primary key.
+		if (empty($urlVar))
+		{
+			$urlVar = $key;
+		}
+
+		// Access check.
+		if (!$this->allowEdit(array($key => $recordId), $key))
+		{
+			$this->setError(JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
+			$this->setMessage($this->getError(), 'error');
+
+			$this->setRedirect(
+				JRoute::_(
+					'index.php?option=' . $this->option . '&view=' . $this->view_list
+					. $this->getRedirectToListAppend(), false
+				)
+			);
+			$table->checkin();
+			return false;
+		}
+
+		$table->store();
+		$this->setRedirect(
+				JRoute::_(
+						'index.php?option=' . $this->option . '&view=' . $this->view_item
+						. $this->getRedirectToItemAppend($recordId, $urlVar), false
+				)
+		);
+
+		return true;
+	}
+
+	/**
 	 * Method to save a record.
 	 *
 	 * @param   string  $key     The name of the primary key of the URL variable.
