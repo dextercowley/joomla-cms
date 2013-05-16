@@ -33,7 +33,7 @@ JFactory::getDocument()->addScriptDeclaration("
 				var ids = $('input:checked');
 				if (ids.length == 1) {
 					// Add version item id to URL
-					var url = $('#content-url').attr('data-url') + '&version_id=' + ids[0].value;
+					var url = $('#toolbar-load').attr('data-url') + '&version_id=' + ids[0].value;
 					$('#content-url').attr('data-url', url);
 					if (window.parent) {
 						window.parent.location = url;
@@ -43,7 +43,19 @@ JFactory::getDocument()->addScriptDeclaration("
 				}
 			});
 			$('#toolbar-preview').click(function() {
-				alert('Preview clicked');
+				var windowSizeArray = ['width=800, height=600, scrollbars=yes'];
+				var ids = $('input:checked');
+				if (ids.length == 1) {
+					// Add version item id to URL
+					var url = $('#toolbar-preview').attr('data-url') + '&version_id=' + ids[0].value;
+					$('#content-url').attr('data-url', url);
+					if (window.parent) {
+						window.open(url, 'My Window Name', windowSizeArray);
+						event.preventDefault();
+					}
+				} else {
+					alert('" . $message . "');
+				}
 			});
 			$('#toolbar-compare').click(function() {
 				alert('Compare clicked');
@@ -53,14 +65,14 @@ JFactory::getDocument()->addScriptDeclaration("
 	"
 );
 
-
 ?>
 <h3><?php echo JText::_('COM_CONTENTHISTORY_MODAL_TITLE'); ?></h3>
-<div data-url="<?php echo JRoute::_($loadUrl);?>" id="content-url" />
 <div class="btn-group pull-right">
-	<button id="toolbar-load" type="submit" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_LOAD_DESC'); ?>">
+	<button id="toolbar-load" type="submit" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_LOAD_DESC'); ?>"
+		data-url="<?php echo JRoute::_($loadUrl);?>" id="content-url">
 		<span class="icon-upload"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_LOAD'); ?></button>
-	<button id="toolbar-preview" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_PREVIEW_DESC'); ?>">
+	<button id="toolbar-preview" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_PREVIEW_DESC'); ?>"
+		data-url="<?php echo JRoute::_('index.php?option=com_contenthistory&view=preview&layout=preview&tmpl=component&' . JSession::getFormToken() . '="1"');?>">
 		<span class="icon-search"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_PREVIEW'); ?></button>
 	<button id="toolbar-compare" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE_DESC'); ?>">
 		<span class="icon-zoom-in"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE'); ?></button>

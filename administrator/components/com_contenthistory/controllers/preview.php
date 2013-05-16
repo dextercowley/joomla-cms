@@ -16,13 +16,13 @@ defined('_JEXEC') or die;
  * @subpackage  com_contenthistory
  * @since       3.2
  */
-class ContenthistoryControllerHistory extends JControllerAdmin
+class ContenthistoryControllerPreview extends JControllerLegacy
 {
 	/**
 	 * Proxy for getModel.
-	 * @since   3.2
+	 * @since   1.6
 	 */
-	public function getModel($name = 'History', $prefix = 'ContenthistoryModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'Preview', $prefix = 'ContenthistoryModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 		return $model;
