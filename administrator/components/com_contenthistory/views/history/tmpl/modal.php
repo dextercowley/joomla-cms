@@ -59,7 +59,7 @@ JFactory::getDocument()->addScriptDeclaration("
 				}
 			});
 			$('#toolbar-compare').click(function() {
-				var windowSizeArray = ['width=800, height=600, scrollbars=yes'];
+				var windowSizeArray = ['width=1200, height=600, scrollbars=yes'];
 				var ids = $('input:checked');
 				if (ids.length == 2) {
 					// Add version item ids to URL
