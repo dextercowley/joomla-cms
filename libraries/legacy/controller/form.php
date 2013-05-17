@@ -547,6 +547,7 @@ class JControllerForm extends JControllerLegacy
 	public function loadhistory()
 	{
 		$app = JFactory::getApplication();
+		$lang  = JFactory::getLanguage();
 		$model = $this->getModel();
 		$table = $model->getTable();
 		$historyId = $app->input->get('version_id', null, 'integer');
@@ -599,6 +600,11 @@ class JControllerForm extends JControllerLegacy
 						. $this->getRedirectToItemAppend($recordId, $urlVar), false
 				)
 		);
+
+		$this->setMessage(JText::sprintf('JLIB_APPLICATION_SUCCESS_LOAD_HISTORY', $model->getState('save_date'), $model->getState('version_note')));
+
+		// Invoke the postSave method to allow for the child class to access the model.
+		$this->postSaveHook($model, $validData);
 
 		return true;
 	}

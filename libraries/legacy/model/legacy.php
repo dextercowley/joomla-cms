@@ -481,6 +481,8 @@ abstract class JModelLegacy extends JObject
 			}
 		}
 
+		$this->setState('save_date', $historyTable->save_date);
+		$this->setState('version_note', $historyTable->version_note);
 		return $table->bind($rowArray);
 	}
 
