@@ -36,7 +36,7 @@ JHtml::_('textdiff.textdiff', 'diff');
 		<td><strong><?php echo $name; ?></strong></td>
 		<td class="original"><?php echo wordwrap($value, 40, ' ', $breakWordsOriginal);?></td>
 		<td class="changed"><?php echo wordwrap($object2->$name, 40, ' ', $breakWordsChanged);?></td>
-		<td class="diff"
+		<td class="diff" />
 	</tr>
 <?php endforeach; ?>
 </tbody>
