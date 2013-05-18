@@ -306,6 +306,7 @@ class JTableContent extends JTable
 			return false;
 		}
 
+		$result = true;
 		if (JComponentHelper::getParams('com_content')->get('save_history', 0))
 		{
 			$contenthistoryHelper = new JHelperContenthistory('com_content.article');
