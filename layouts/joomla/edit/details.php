@@ -76,16 +76,14 @@ $saveHistory = $displayData->get('state')->get('params')->get('save_history', 0)
 						<?php echo $displayData->get('form')->getInput('language'); ?>
 					</div>
 				</div>
-				<div class="control-group">
-					<?php foreach ($displayData->get('form')->getFieldset('jmetadata') as $field) : ?>
-						<?php if ($field->name == 'jform[metadata][tags][]') :?>
-						<div class="control-group">
-							<div class="control-label"><?php echo $field->label; ?></div>
-							<div class="controls"><?php echo $field->input; ?></div>
-						</div>
-						<?php endif; ?>
-					<?php endforeach; ?>
-				</div>
+				<?php foreach ($displayData->get('form')->getFieldset('jmetadata') as $field) : ?>
+					<?php if ($field->name == 'jform[metadata][tags][]') :?>
+					<div class="control-group">
+						<div class="control-label"><?php echo $field->label; ?></div>
+						<div class="controls"><?php echo $field->input; ?></div>
+					</div>
+					<?php endif; ?>
+				<?php endforeach; ?>
 				<?php if ($saveHistory) : ?>
 					<div class="control-group">
 					<div class="control-label">
@@ -96,7 +94,6 @@ $saveHistory = $displayData->get('state')->get('params')->get('save_history', 0)
 					</div>
 					</div>
 				<?php endif; ?>
-
 			</fieldset>
 		</div>
 
