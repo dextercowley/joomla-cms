@@ -23,6 +23,14 @@ class CategoriesModelCategory extends JModelAdmin
 	 * @since  1.6
 	 */
 	protected $text_prefix = 'COM_CATEGORIES';
+	
+	/**
+	 * The type alias for this content type. Used for content version history.
+	 *
+	 * @var      string
+	 * @since    3.2
+	 */
+	public $typeAlias = 'com_content.category';
 
 	/**
 	 * Method to test whether a record can be deleted.

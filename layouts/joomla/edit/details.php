@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 // JLayout for standard handling of the details sidebar in administrator edit screens.
 $title = $displayData->get('form')->getValue('title');
 $published = $displayData->get('form')->getField('published');
+$saveHistory = $displayData->get('state')->get('params')->get('save_history', 0);
 ?>
 <div class="span2">
 <h4><?php echo JText::_('JDETAILS');?></h4>
@@ -75,14 +76,24 @@ $published = $displayData->get('form')->getField('published');
 						<?php echo $displayData->get('form')->getInput('language'); ?>
 					</div>
 				</div>
-				<?php foreach ($displayData->get('form')->getFieldset('jmetadata') as $field) : ?>
-					<?php if ($field->name == 'jform[metadata][tags][]') :?>
+					<?php foreach ($displayData->get('form')->getFieldset('jmetadata') as $field) : ?>
+						<?php if ($field->name == 'jform[metadata][tags][]') :?>
+						<div class="control-group">
+							<div class="control-label"><?php echo $field->label; ?></div>
+							<div class="controls"><?php echo $field->input; ?></div>
+						</div>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				<?php if ($saveHistory) : ?>
 					<div class="control-group">
-						<div class="control-label"><?php echo $field->label; ?></div>
-						<div class="controls"><?php echo $field->input; ?></div>
+					<div class="control-label">
+						<?php echo $displayData->get('form')->getLabel('version_note'); ?>
 					</div>
-					<?php endif; ?>
-				<?php endforeach; ?>
+					<div class="controls">
+						<?php echo $displayData->get('form')->getInput('version_note'); ?>
+					</div>
+					</div>
+				<?php endif; ?>
 
 			</fieldset>
 		</div>

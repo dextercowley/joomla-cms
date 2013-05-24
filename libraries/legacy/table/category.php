@@ -210,6 +210,11 @@ class JTableCategory extends JTableNested
 	public function delete($pk = null, $children = true)
 	{
 		$result = parent::delete($pk);
+		if (JComponentHelper::getParams($input->getCmd('extension', 'com_content'))->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory('com_content.category');
+			$result = $result && $contenthistoryHelper->deleteHistory($this);
+		}
 		$this->tagsHelper->typeAlias = $this->extension . '.category';
 		return $result && $this->tagsHelper->deleteTagData($this, $pk);
 	}
@@ -253,7 +258,17 @@ class JTableCategory extends JTableNested
 
 		$this->tagsHelper->typeAlias = $this->extension . '.category';
 		$this->tagsHelper->preStoreProcess($this);
+
 		$result = parent::store($updateNulls);
-		return $result && $this->tagsHelper->postStoreProcess($this);
+
+		$result = $result && $this->tagsHelper->postStoreProcess($this);
+
+		if (JComponentHelper::getParams($this->extension)->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory($this->extension . '.category');
+			$result = $result && $contenthistoryHelper->store($this);
+		}
+
+		return $result;
 	}
 }

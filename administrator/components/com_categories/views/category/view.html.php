@@ -148,6 +148,14 @@ class CategoriesViewCategory extends JViewLegacy
 		{
 			JToolbarHelper::cancel('category.cancel', 'JTOOLBAR_CLOSE');
 		}
+		
+		$saveHistory = JComponentHelper::getParams($input->getCmd('extension', 'com_content'))->get('save_history', 0);
+		if ($saveHistory && $user->authorise('core.edit'))
+		{
+			$itemId = $this->item->id;
+			$typeAlias = 'com_content.category';
+			JToolbarHelper::versions($typeAlias, $itemId);
+		}
 
 		JToolbarHelper::divider();
 
