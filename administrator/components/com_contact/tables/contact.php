@@ -78,6 +78,11 @@ class ContactTableContact extends JTable
 	public function delete($pk = null)
 	{
 		$result = parent::delete($pk);
+		if (JComponentHelper::getParams('com_contact')->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory('com_contact.contact');
+			$result = $result && $contenthistoryHelper->deleteHistory($this);
+		}
 		return $result && $this->tagsHelper->deleteTagData($this, $pk);
 	}
 
@@ -153,7 +158,16 @@ class ContactTableContact extends JTable
 		$this->tagsHelper->preStoreProcess($this);
 		$result = parent::store($updateNulls);
 
-		return $result && $this->tagsHelper->postStoreProcess($this);	}
+		$result = $result && $this->tagsHelper->postStoreProcess($this);
+
+		if (JComponentHelper::getParams('com_contact')->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory('com_contact.contact');
+			$result = $result && $contenthistoryHelper->store($this);
+		}
+
+		return $result;
+	}
 
 	/**
 	 * Overloaded check function

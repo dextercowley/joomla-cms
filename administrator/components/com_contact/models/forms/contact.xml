@@ -27,6 +27,14 @@
 			class="inputbox"
 			size="30"
 		/>
+		
+		<field name="version_note" 
+			type="text" 
+			label="JGLOBAL_FIELD_VERSION_NOTE_LABEL"
+			description="JGLOBAL_FIELD_VERSION_NOTE_DESC" 
+			class="inputbox" size="45" 
+			labelclass="control-label"
+		/>
 
 		<field name="user_id"
 			type="user"
