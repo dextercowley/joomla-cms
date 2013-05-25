@@ -110,7 +110,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					<?php echo JText::_('JDATE'); ?>
 				</th>
 				<th width="15%">
-					<?php echo JText::_('COM_CONTENTHISTORY_VERSION_NAME'); ?>
+					<?php echo JText::_('COM_CONTENTHISTORY_VERSION_NOTE'); ?>
 				</th>
 				<th width="15%">
 					<?php echo JText::_('JAUTHOR'); ?>
