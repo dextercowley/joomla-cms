@@ -43,6 +43,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					alert('" . $message . "');
 				}
 			});
+
 			$('#toolbar-preview').click(function() {
 				var windowSizeArray = ['width=800, height=600, scrollbars=yes'];
 				var ids = $('input:checked');
@@ -58,14 +59,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					alert('" . $message . "');
 				}
 			});
-			$('.save-date').click(function(event) {
-				var windowSizeArray = ['width=800, height=600, scrollbars=yes'];
-				var url = $(event.target).attr('data-url');
-				if (window.parent) {
-					window.open(url, '', windowSizeArray);
-					event.preventDefault();
-				}
-			});
+
 			$('#toolbar-compare').click(function() {
 				var windowSizeArray = ['width=1200, height=600, scrollbars=yes'];
 				var ids = $('input:checked');
@@ -93,10 +87,10 @@ JFactory::getDocument()->addScriptDeclaration("
 		data-url="<?php echo JRoute::_($loadUrl);?>" id="content-url">
 		<span class="icon-upload"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_LOAD'); ?></button>
 	<button id="toolbar-preview" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_PREVIEW_DESC'); ?>"
-		data-url="<?php echo JRoute::_('index.php?option=com_contenthistory&view=preview&layout=preview&tmpl=component&' . JSession::getFormToken() . '="1"');?>">
+		data-url="<?php echo JRoute::_('index.php?option=com_contenthistory&view=preview&layout=preview&tmpl=component&' . JSession::getFormToken() . '=1');?>">
 		<span class="icon-search"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_PREVIEW'); ?></button>
 	<button id="toolbar-compare" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE_DESC'); ?>"
-		data-url="<?php echo JRoute::_('index.php?option=com_contenthistory&view=compare&layout=compare&tmpl=component&' . JSession::getFormToken() . '="1"');?>">
+		data-url="<?php echo JRoute::_('index.php?option=com_contenthistory&view=compare&layout=compare&tmpl=component&' . JSession::getFormToken() . '=1');?>">
 		<span class="icon-zoom-in"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE'); ?></button>
 </div>
 <div class="clearfix"></div>
@@ -136,8 +130,8 @@ JFactory::getDocument()->addScriptDeclaration("
 					<?php echo JHtml::_('grid.id', $i, $item->version_id); ?>
 				</td>
 				<td align="left">
-					<a class="save-date" href="#"
-						data-url="<?php echo JRoute::_('index.php?option=com_contenthistory&view=preview&layout=preview&tmpl=component&' . JSession::getFormToken() . '="1"&version_id=' . $item->version_id);?>">
+					<a class="save-date" onclick="window.open(this.href,'win2','width=800,height=600,menubar=no,resizable=yes'); return false;"
+						href="<?php echo JRoute::_('index.php?option=com_contenthistory&view=preview&layout=preview&tmpl=component&' . JSession::getFormToken() . '=1&version_id=' . $item->version_id);?>">
 						<?php echo $item->save_date; ?>
 					</a>
 				</td>
