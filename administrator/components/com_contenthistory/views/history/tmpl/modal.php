@@ -45,7 +45,7 @@ JFactory::getDocument()->addScriptDeclaration("
 			});
 
 			$('#toolbar-preview').click(function() {
-				var windowSizeArray = ['width=800, height=600, scrollbars=yes'];
+				var windowSizeArray = ['width=800, height=600, resizable=yes, scrollbars=yes'];
 				var ids = $('input:checked');
 				if (ids.length == 1) {
 					// Add version item id to URL
@@ -53,7 +53,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					$('#content-url').attr('data-url', url);
 					if (window.parent) {
 						window.open(url, '', windowSizeArray);
-						event.preventDefault();
+						return false;
 					}
 				} else {
 					alert('" . $message . "');
@@ -61,7 +61,7 @@ JFactory::getDocument()->addScriptDeclaration("
 			});
 
 			$('#toolbar-compare').click(function() {
-				var windowSizeArray = ['width=1200, height=600, scrollbars=yes'];
+				var windowSizeArray = ['width=1200, height=600, resizable=yes, scrollbars=yes'];
 				var ids = $('input:checked');
 				if (ids.length == 2) {
 					// Add version item ids to URL
@@ -69,7 +69,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					$('#content-url').attr('data-url', url);
 					if (window.parent) {
 						window.open(url, '', windowSizeArray);
-						event.preventDefault();
+						return false;
 					}
 				} else {
 					alert('" . $compareMessage . "');
@@ -130,7 +130,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					<?php echo JHtml::_('grid.id', $i, $item->version_id); ?>
 				</td>
 				<td align="left">
-					<a class="save-date" onclick="window.open(this.href,'win2','width=800,height=600,menubar=no,resizable=yes'); return false;"
+					<a class="save-date" onclick="window.open(this.href,'win2','width=800,height=600,resizable=yes,scrollbars=yes'); return false;"
 						href="<?php echo JRoute::_('index.php?option=com_contenthistory&view=preview&layout=preview&tmpl=component&' . JSession::getFormToken() . '=1&version_id=' . $item->version_id);?>">
 						<?php echo $item->save_date; ?>
 					</a>
