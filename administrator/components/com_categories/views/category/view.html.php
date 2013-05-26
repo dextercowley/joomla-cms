@@ -153,7 +153,7 @@ class CategoriesViewCategory extends JViewLegacy
 		if ($saveHistory && $user->authorise('core.edit'))
 		{
 			$itemId = $this->item->id;
-			$typeAlias = 'com_content.category';
+			$typeAlias = 'com_contact.category';
 			JToolbarHelper::versions($typeAlias, $itemId);
 		}
 
