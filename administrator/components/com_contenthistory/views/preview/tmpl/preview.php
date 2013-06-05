@@ -19,26 +19,26 @@ JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
 </h3>
 <table class="table table-striped" >
 <thead><tr>
-	<th><?php echo JText::_('COM_CONTENTHISTORY_PREVIEW_FIELD'); ?></th>
+	<th width="25%"><?php echo JText::_('COM_CONTENTHISTORY_PREVIEW_FIELD'); ?></th>
 	<th><?php echo JText::_('COM_CONTENTHISTORY_PREVIEW_VALUE'); ?></th>
 </tr></thead>
 <tbody>
 <?php foreach ($this->item->data as $name => $value) : ?>
 	<tr>
-	<?php if (is_object($value)): ?>	
-		<td><strong><?php echo $name; ?></strong></td>
+	<?php if (is_object($value->value)): ?>
+		<td><strong><?php echo $value->label; ?></strong></td>
 		<td></td><tr>
-		<?php foreach ($value as $subName => $subValue): ?>
+		<?php foreach ($value->value as $subName => $subValue): ?>
 			<?php if ($subValue): ?>
 				<tr>
-				<td><i>&nbsp;&nbsp;<?php echo $subName; ?></i></td>
-				<td><?php echo $subValue; ?></td>
+				<td><i>&nbsp;&nbsp;<?php echo $subValue->label; ?></i></td>
+				<td><?php echo $subValue->value; ?></td>
 				</tr>
 			<?php endif; ?>
 		<?php endforeach; ?>
 	<?php else: ?>
-		<td><strong><?php echo $name; ?></strong></td>
-		<td><?php echo $value; ?></td>
+		<td><strong><?php echo $value->label; ?></strong></td>
+		<td><?php echo $value->value; ?></td>
 	<?php endif; ?>
 	</tr>
 <?php endforeach; ?>

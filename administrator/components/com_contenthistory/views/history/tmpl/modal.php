@@ -26,6 +26,7 @@ $option = ($aliasArray[1] == 'category') ? 'com_categories&amp;extension=' . $al
 $filter = JFilterInput::getInstance();
 $task = $filter->clean($aliasArray[1]) . '.loadhistory';
 $loadUrl = JRoute::_('index.php?option=' . $filter->clean($option) . '&amp;task=' . $task);
+$hash = $this->state->get('sha1_hash');
 
 JFactory::getDocument()->addScriptDeclaration("
 	(function ($){
@@ -61,7 +62,7 @@ JFactory::getDocument()->addScriptDeclaration("
 			});
 
 			$('#toolbar-compare').click(function() {
-				var windowSizeArray = ['width=1200, height=600, resizable=yes, scrollbars=yes'];
+				var windowSizeArray = ['width=1000, height=600, resizable=yes, scrollbars=yes'];
 				var ids = $('input:checked');
 				if (ids.length == 2) {
 					// Add version item ids to URL
@@ -134,6 +135,9 @@ JFactory::getDocument()->addScriptDeclaration("
 						href="<?php echo JRoute::_('index.php?option=com_contenthistory&view=preview&layout=preview&tmpl=component&' . JSession::getFormToken() . '=1&version_id=' . $item->version_id);?>">
 						<?php echo $item->save_date; ?>
 					</a>
+					<?php if ($item->sha1_hash == $hash) :?>
+						<i class="icon-featured"></i>&nbsp;
+					<?php endif; ?>
 				</td>
 				<td align="left">
 					<?php echo htmlspecialchars($item->version_note); ?>
@@ -149,11 +153,6 @@ JFactory::getDocument()->addScriptDeclaration("
 		</tbody>
 	</table>
 	<div>
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="field" value="<?php echo $this->escape($field); ?>" />
-		<input type="hidden" name="boxchecked" value="0" />
-		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-		<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 	</div>

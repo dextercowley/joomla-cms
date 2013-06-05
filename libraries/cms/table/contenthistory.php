@@ -42,7 +42,7 @@ class JTableContenthistory extends JTable
 	}
 
 	/**
-	 * Overrides JTable::store to set modified data and user id.
+	 * Overrides JTable::store to set modified hash, user id, and save date.
 	 *
 	 * @param   boolean  $updateNulls  True to update fields even if they are null.
 	 *
@@ -53,7 +53,6 @@ class JTableContenthistory extends JTable
 	public function store($updateNulls = false)
 	{
 		$this->set('character_count', strlen($this->get('version_data')));
-
 		if (!isset($this->sha1_hash))
 		{
 			$this->set('sha1_hash', $this->getSha1($this->get('version_data')));
@@ -82,6 +81,28 @@ class JTableContenthistory extends JTable
 			{
 				unset($object->$remove);
 			}
+		}
+
+		// Convert integers and booleans to strings to get a consistent hash value
+		foreach ($object as $name => $value)
+		{
+			if (is_object($value))
+			{
+				// Go one level down for JSON column values
+				foreach ($value as $subName => $subValue)
+				{
+					$object->$subName = (is_int($subValue) || is_bool($subValue)) ? (string) $subValue : $subValue;
+				}
+			}
+			else
+			{
+				$object->$name = (is_int($value) || is_bool($value)) ? (string) $value : $value;
+			}
+		}
+		// Work around empty publish_down value
+		if (isset($object->publish_down))
+		{
+			$object->publish_down = (int) $object->publish_down;
 		}
 		return sha1(json_encode($object));
 	}

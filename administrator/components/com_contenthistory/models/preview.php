@@ -9,6 +9,8 @@
 
 defined('_JEXEC') or die;
 
+JLoader::register('ContenthistoryHelper', JPATH_ADMINISTRATOR . '/components/com_contenthistory/helpers/contenthistory.php');
+
 /**
  * Methods supporting a list of contenthistory records.
  *
@@ -31,16 +33,13 @@ class ContenthistoryModelPreview extends JModelItem
 	public function getItem()
 	{
 		$table = JTable::getInstance('Contenthistory');
-		$helper = new JHelperContenthistory(null);
 		$versionId = JFactory::getApplication()->input->getInt('version_id');
 		if ($table->load($versionId))
 		{
-			$object = json_decode($table->version_data);
-			$object = $helper->decodeFields($object);
 			$result = new stdClass();
 			$result->save_date = $table->save_date;
 			$result->version_note = $table->version_note;
-			$result->data = $object;
+			$result->data = ContenthistoryHelper::prepareData($table);
 		}
 		else
 		{

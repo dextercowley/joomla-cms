@@ -48,8 +48,8 @@
 	<field
 		name="path"
 		type="text"
-		label="CATEGORIES_PATH_LABEL"
-		description="CATEGORIES_PATH_DESC"
+		label="COM_CATEGORIES_PATH_LABEL"
+		description="COM_CATEGORIES_PATH_DESC"
 		class="readonly"
 		size="40"
 		readonly="true"/>
@@ -213,7 +213,7 @@
 		component="com_content"
 		section="category"/>
 
-	<fields name="params">
+	<fields name="params" label="COM_CATEGORIES_FIELD_BASIC_LABEL">
 		<fieldset
 			name="basic">
 
@@ -234,7 +234,7 @@
 		</fieldset>
 	</fields>
 
-	<fields name="metadata">
+	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 		<fieldset name="jmetadata"
 			label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 			<field

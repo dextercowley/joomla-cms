@@ -113,4 +113,26 @@ class JTableContenttype extends JTable
 		return $db->loadResult($query);
 	}
 
+	/**
+	 * Method to get the JTable object for the content type from the table object.
+	 *
+	 * @return  mixed     JTable object on success, otherwise false.
+	 *
+	 * @since   3.2
+	 */
+	public function getContentTable()
+	{
+		$result = false;
+		$tableInfo = json_decode($this->table);
+		if (is_object($tableInfo) && isset($tableInfo->special))
+		{
+			if (is_object($tableInfo->special) && isset($tableInfo->special->type) && isset($tableInfo->special->prefix))
+			{
+				$result = JTable::getInstance($tableInfo->special->type, $tableInfo->special->prefix);
+			}
+		}
+		return $result;
+	}
+
+
 }

@@ -260,7 +260,6 @@ class JTableContent extends JTable
 		}
 		$this->tagsHelper->typeAlias = 'com_content.article';
 		return $result && $this->tagsHelper->deleteTagData($this, $pk);
-
 	}
 
 	/**

@@ -58,6 +58,7 @@ class ContenthistoryModelHistory extends JModelList
 		$this->setState('item_id', $itemId);
 		$this->setState('type_id', $typeId);
 		$this->setState('type_alias', $typeAlias);
+		$this->setState('sha1_hash', $this->getSha1Hash());
 		// Load the parameters.
 		$params = JComponentHelper::getParams('com_contenthistory');
 		$this->setState('params', $params);
@@ -100,4 +101,31 @@ class ContenthistoryModelHistory extends JModelList
 		$query->order($db->quoteName($orderCol) . $orderDirn);
 		return $query;
 	}
+
+	/**
+	 * Get the sha1 hash value for the current item being edited.
+	 *
+	 * @return  string  sha1 hash of row data
+	 *
+	 * @since   3.2
+	 */
+	protected function getSha1Hash()
+	{
+		$result = false;
+		$typesTable = JTable::getInstance('Contenttype', 'JTable');
+		$typeId = JFactory::getApplication()->input->getInteger('type_id', 0);
+		$typesTable->load($typeId);
+		$typeAliasArray = explode('.', $typesTable->type_alias);
+		JTable::addIncludePath(JPATH_ROOT . '/administrator/components/' . $typeAliasArray[0] . '/tables');
+		$contentTable = $typesTable->getContentTable();
+		$keyValue = JFactory::getApplication()->input->getInteger('item_id', 0);
+		if ($contentTable && $contentTable->load($keyValue))
+		{
+			$helper = new JHelperContenthistory(null);
+			$dataObject = $helper->getDataObject($contentTable);
+			$result = $this->getTable('Contenthistory', 'JTable')->getSha1(json_encode($dataObject));
+		}
+		return $result;
+	}
+
 }

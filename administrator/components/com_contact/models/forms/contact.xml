@@ -331,7 +331,7 @@
 		/>
 	</fieldset>
 
-	<fields name="params">
+	<fields name="params" label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS">
 		<fieldset name="jbasic"
 			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
 			>
@@ -697,7 +697,7 @@
 			description="COM_CONTACT_FIELD_CONFIG_REDIRECT_DESC" />
 		</fieldset>
 	</fields>
-	<fields name="metadata">
+	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 		<fieldset name="jmetadata"
 			label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 	

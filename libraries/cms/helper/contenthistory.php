@@ -65,6 +65,28 @@ class JHelperContenthistory
 	}
 
 	/**
+	 * Method to get an object containing all of the table columns.
+	 *
+	 * @param   JTable object.
+	 *
+	 * @return  stdClass with all of the columns and values.
+	 *
+	 * @since   3.2
+	 */
+	public function getDataObject(JTable $table)
+	{
+		$fields = $table->getFields();
+		$dataObject = new stdClass();
+		foreach ($fields as $field)
+		{
+			$fieldName = $field->Field;
+			$dataObject->$fieldName = $table->get($fieldName);
+		}
+		return $dataObject;
+	}
+
+
+	/**
 	 * Method to get a list of available versions of this item.
 	 *
 	 * @param   integer  $typeId  Type id for this component item.
@@ -79,11 +101,11 @@ class JHelperContenthistory
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName('h.version_note') . ',' . $db->quoteName('h.save_date') . ',' . $db->quoteName('u.name'))
-		->from($db->quoteName('#__ucm_history') . ' AS h ')
-		->leftJoin($db->quoteName('#__users') . ' AS u ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('h.editor_user_id'))
-		->where($db->quoteName('ucm_item_id') . ' = ' . $db->quote($id))
-		->where($db->quoteName('ucm_type_id') . ' = ' . (int) $typeId)
-		->order($db->quoteName('save_date') . ' DESC ');
+			->from($db->quoteName('#__ucm_history') . ' AS h ')
+			->leftJoin($db->quoteName('#__users') . ' AS u ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('h.editor_user_id'))
+			->where($db->quoteName('ucm_item_id') . ' = ' . $db->quote($id))
+			->where($db->quoteName('ucm_type_id') . ' = ' . (int) $typeId)
+			->order($db->quoteName('save_date') . ' DESC ');
 		$db->setQuery($query);
 		return $db->loadObjectList();
 	}
@@ -99,13 +121,7 @@ class JHelperContenthistory
 	 */
 	public function store($table)
 	{
-		$fields = $table->getFields();
-		$dataObject = new stdClass();
-		foreach ($fields as $field)
-		{
-			$fieldName = $field->Field;
-			$dataObject->$fieldName = $table->get($fieldName);
-		}
+		$dataObject = $this->getDataObject($table);
 		$historyTable = JTable::getInstance('Contenthistory', 'JTable');
 		$typeTable = JTable::getInstance('Contenttype', 'JTable');
 		$historyTable->set('ucm_type_id', $typeTable->getTypeId($this->typeAlias));
@@ -142,30 +158,6 @@ class JHelperContenthistory
 			$historyTable->deleteOldVersions($maxVersions);
 		}
 		return $result;
-	}
-
-	/**
-	 * Method to decode JSON-encoded fields in a standard object. Used to unpack JSON strings in the content history data column.
-	 *
-	 * @param   stdClass  $object  Standard class object that may contain one or more JSON-encoded fields.
-	 *
-	 * @return  stdClass  Object with any JSON-encoded fields unpacked.
-	 *
-	 * @since   3.2
-	 */
-	public function decodeFields($object)
-	{
-		if (is_object($object))
-		{
-			foreach ($object as $name => $value)
-			{
-				if ($subObject = json_decode($value))
-				{
-					$object->$name = $subObject;
-				}
-			}
-		}
-		return $object;
 	}
 
 }

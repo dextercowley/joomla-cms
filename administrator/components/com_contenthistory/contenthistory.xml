@@ -22,6 +22,8 @@
 			<filename>index.html</filename>
 			<filename>contenthistory.php</filename>
 			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>media</folder>
 			<folder>models</folder>
 			<folder>views</folder>
 		</files>
