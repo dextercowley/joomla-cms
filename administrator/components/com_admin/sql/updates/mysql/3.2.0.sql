@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `#__ucm_history` (
   `character_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Number of characters in this version.',
   `sha1_hash` varchar(50) NOT NULL DEFAULT '' COMMENT 'SHA1 hash of the version_data column.',
   `version_data` mediumtext NOT NULL COMMENT 'json-encoded string of version data',
+  `auto_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0=auto delete; 1=keep',
   PRIMARY KEY (`version_id`),
   KEY `idx_ucm_item_id` (`ucm_type_id`,`ucm_item_id`),
   KEY `idx_save_date` (`save_date`)
