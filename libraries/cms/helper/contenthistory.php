@@ -144,11 +144,19 @@ class JHelperContenthistory
 			$historyTable->set('version_note', $versionName);
 		}
 
-		// Don't save if hash already exists
+		// Don't save if hash already exists and same version note
 		$historyTable->set('sha1_hash', $historyTable->getSha1($dataObject));
-		if ($historyTable->getHashMatch())
+		if ($historyRow = $historyTable->getHashMatch())
 		{
-			return true;
+			if (!$versionName || ($historyRow->version_note == $versionName))
+			{
+				return true;
+			}
+			else
+			{
+				// update existing row to set version note
+				$historyTable->set('version_id', $historyRow->version_id);
+			}
 		}
 
 		$result =  $historyTable->store();
