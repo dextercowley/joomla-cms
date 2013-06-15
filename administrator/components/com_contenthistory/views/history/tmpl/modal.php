@@ -32,7 +32,7 @@ JFactory::getDocument()->addScriptDeclaration("
 	(function ($){
 		$(document).ready(function (){
 			$('#toolbar-load').click(function() {
-				var ids = $('input:checked');
+				var ids = $('input[id*=\'cb\']:checked');
 				if (ids.length == 1) {
 					// Add version item id to URL
 					var url = $('#toolbar-load').attr('data-url') + '&version_id=' + ids[0].value;
@@ -47,7 +47,7 @@ JFactory::getDocument()->addScriptDeclaration("
 
 			$('#toolbar-preview').click(function() {
 				var windowSizeArray = ['width=800, height=600, resizable=yes, scrollbars=yes'];
-				var ids = $('input:checked');
+				var ids = $('input[id*=\'cb\']:checked');
 				if (ids.length == 1) {
 					// Add version item id to URL
 					var url = $('#toolbar-preview').attr('data-url') + '&version_id=' + ids[0].value;
@@ -63,7 +63,7 @@ JFactory::getDocument()->addScriptDeclaration("
 
 			$('#toolbar-compare').click(function() {
 				var windowSizeArray = ['width=1000, height=600, resizable=yes, scrollbars=yes'];
-				var ids = $('input:checked');
+				var ids = $('input[id*=\'cb\']:checked');
 				if (ids.length == 2) {
 					// Add version item ids to URL
 					var url = $('#toolbar-compare').attr('data-url') + '&id1=' + ids[0].value + '&id2=' + ids[1].value;
@@ -100,7 +100,9 @@ JFactory::getDocument()->addScriptDeclaration("
 	<table class="table table-striped table-condensed">
 		<thead>
 			<tr>
-				<th width="1%" class="hidden-phone"/>
+				<th width="1%" class="center hidden-phone">
+					<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+				</th>
 				<th width="15%">
 					<?php echo JText::_('JDATE'); ?>
 				</th>
