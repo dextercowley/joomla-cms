@@ -572,11 +572,7 @@ class JControllerForm extends JControllerLegacy
 		}
 		$recordId = $table->$key;
 		// To avoid data collisions the urlVar may be different from the primary key.
-		$urlVar = $this->urlVar;
-		if (empty($urlVar))
-		{
-			$urlVar = $key;
-		}
+		$urlVar = empty($this->urlVar) ? $key : $this->url;
 
 		// Access check.
 		if (!$this->allowEdit(array($key => $recordId), $key))
@@ -605,7 +601,7 @@ class JControllerForm extends JControllerLegacy
 		$this->setMessage(JText::sprintf('JLIB_APPLICATION_SUCCESS_LOAD_HISTORY', $model->getState('save_date'), $model->getState('version_note')));
 
 		// Invoke the postSave method to allow for the child class to access the model.
-		$this->postSaveHook($model, $validData);
+		$this->postSaveHook($model);
 
 		return true;
 	}
