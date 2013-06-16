@@ -21,11 +21,13 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 $message = JText::_('COM_CONTENTHISTORY_BUTTON_SELECT_ONE');
 $compareMessage = JText::_('COM_CONTENTHISTORY_BUTTON_SELECT_TWO');
+$deleteMessage = JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST');
 $aliasArray = explode('.', $this->state->type_alias);
 $option = ($aliasArray[1] == 'category') ? 'com_categories&amp;extension=' . $aliasArray[0] : $aliasArray[0];
 $filter = JFilterInput::getInstance();
 $task = $filter->clean($aliasArray[1]) . '.loadhistory';
 $loadUrl = JRoute::_('index.php?option=' . $filter->clean($option) . '&amp;task=' . $task);
+$deleteUrl = JRoute::_('index.php?option=com_contenthistory&task=history.delete');
 $hash = $this->state->get('sha1_hash');
 
 JFactory::getDocument()->addScriptDeclaration("
@@ -42,6 +44,22 @@ JFactory::getDocument()->addScriptDeclaration("
 					}
 				} else {
 					alert('" . $message . "');
+				}
+			});
+
+			$('#toolbar-delete').click(function() {
+				var ids = $('input[id*=\'cb\']:checked').map(function(){
+					return $(this).val();
+				}).get();
+				if (ids.length > 0) {
+					// Add version item id to URL
+					var url = $('#toolbar-delete').attr('data-url') + '&version_id=' + ids;
+					$('#content-url').attr('data-url', url);
+					if (window.parent) {
+						window.parent.location = url;
+					}
+				} else {
+					alert('" . $deleteMessage . "');
 				}
 			});
 
@@ -93,6 +111,9 @@ JFactory::getDocument()->addScriptDeclaration("
 	<button id="toolbar-compare" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE_DESC'); ?>"
 		data-url="<?php echo JRoute::_('index.php?option=com_contenthistory&view=compare&layout=compare&tmpl=component&' . JSession::getFormToken() . '=1');?>">
 		<span class="icon-zoom-in"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE'); ?></button>
+	<button id="toolbar-delete" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_DELETE_DESC'); ?>"
+		data-url="<?php echo $deleteUrl; ?>"
+		<span class="icon-delete"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_DELETE'); ?></button>
 </div>
 <div class="clearfix"></div>
 <form action="<?php echo JRoute::_('index.php?option=com_contenthistory&view=history&layout=modal&tmpl=component');?>" method="post" name="adminForm" id="adminForm">
@@ -125,9 +146,8 @@ JFactory::getDocument()->addScriptDeclaration("
 			</tr>
 		</tfoot>
 		<tbody>
-		<?php
-			$i = 0;
-			foreach ($this->items as $item) : ?>
+		<?php $i = 0; ?>
+		<?php foreach ($this->items as $item) : ?>
 			<tr class="row<?php echo $i % 2; ?>">
 				<td class="center hidden-phone">
 					<?php echo JHtml::_('grid.id', $i, $item->version_id); ?>
@@ -151,6 +171,7 @@ JFactory::getDocument()->addScriptDeclaration("
 					<?php echo number_format((int) $item->character_count, 0, '.', ','); ?>
 				</td>
 			</tr>
+			<?php $i++; ?>
 		<?php endforeach; ?>
 		</tbody>
 	</table>
