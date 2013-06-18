@@ -29,6 +29,8 @@ $task = $filter->clean($aliasArray[1]) . '.loadhistory';
 $loadUrl = JRoute::_('index.php?option=' . $filter->clean($option) . '&amp;task=' . $task);
 $deleteUrl = JRoute::_('index.php?option=com_contenthistory&task=history.delete');
 $hash = $this->state->get('sha1_hash');
+$formUrl = 'index.php?option=com_contenthistory&view=history&layout=modal&tmpl=component&item_id=' . $this->state->get('item_id') . '&type_id='
+	. $this->state->get('type_id')  . '&type_alias=' . $this->state->get('type_alias')  . '&' . JSession::getFormToken() . '=1';
 
 JFactory::getDocument()->addScriptDeclaration("
 	(function ($){
@@ -51,14 +53,15 @@ JFactory::getDocument()->addScriptDeclaration("
 				var ids = $('input[id*=\'cb\']:checked').map(function(){
 					return $(this).val();
 				}).get();
-				if (ids.length > 0) {
+				if (ids.length > 0)
+				{
 					// Add version item id to URL
 					var url = $('#toolbar-delete').attr('data-url') + '&version_id=' + ids;
 					$('#content-url').attr('data-url', url);
-					if (window.parent) {
-						window.parent.location = url;
-					}
-				} else {
+					$('form#adminForm').submit();
+				}
+				else
+				{
 					alert('" . $deleteMessage . "');
 				}
 			});
@@ -116,7 +119,7 @@ JFactory::getDocument()->addScriptDeclaration("
 		<span class="icon-delete"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_DELETE'); ?></button>
 </div>
 <div class="clearfix"></div>
-<form action="<?php echo JRoute::_('index.php?option=com_contenthistory&view=history&layout=modal&tmpl=component');?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_($formUrl);?>" method="post" name="adminForm" id="adminForm">
 <div id="j-main-container">
 	<table class="table table-striped table-condensed">
 		<thead>
