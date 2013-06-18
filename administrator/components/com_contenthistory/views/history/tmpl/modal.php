@@ -55,13 +55,11 @@ JFactory::getDocument()->addScriptDeclaration("
 				}).get();
 				if (ids.length > 0)
 				{
-					// Add version item id to URL
-					var url = $('#toolbar-delete').attr('data-url') + '&version_id=' + ids;
-					$('#content-url').attr('data-url', url);
+					// Add delete task to URL
+					$('form#adminForm').attr('action', $('form#adminForm').attr('action') + '&task=history.delete');
 					$('form#adminForm').submit();
 				}
-				else
-				{
+				else {
 					alert('" . $deleteMessage . "');
 				}
 			});
@@ -114,8 +112,7 @@ JFactory::getDocument()->addScriptDeclaration("
 	<button id="toolbar-compare" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE_DESC'); ?>"
 		data-url="<?php echo JRoute::_('index.php?option=com_contenthistory&view=compare&layout=compare&tmpl=component&' . JSession::getFormToken() . '=1');?>">
 		<span class="icon-zoom-in"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE'); ?></button>
-	<button id="toolbar-delete" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_DELETE_DESC'); ?>"
-		data-url="<?php echo $deleteUrl; ?>"
+	<button id="toolbar-delete" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_DELETE_DESC'); ?>">
 		<span class="icon-delete"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_DELETE'); ?></button>
 </div>
 <div class="clearfix"></div>
@@ -180,6 +177,7 @@ JFactory::getDocument()->addScriptDeclaration("
 	</table>
 	<div>
 		<?php echo JHtml::_('form.token'); ?>
+		<input type="hidden" name="boxchecked" value="0" />
 	</div>
 	</div>
 </form>
