@@ -30,10 +30,10 @@ class ContenthistoryModelHistory extends JModelList
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
-				'version_id', 'h.version_id',
-				'version_note', 'h.version_note',
-				'save_date', 'h.save_date',
-				'editor_user_id', 'h.editor_user_id',
+					'version_id', 'h.version_id',
+					'version_note', 'h.version_note',
+					'save_date', 'h.save_date',
+					'editor_user_id', 'h.editor_user_id',
 			);
 		}
 
@@ -41,14 +41,15 @@ class ContenthistoryModelHistory extends JModelList
 	}
 
 	/**
-	 * Method to test whether a history record can be deleted.
+	 * Method to test whether a history record can be deleted. Note that we check whether we have edit permissions
+	 * for the content item row.
 	 *
 	 * @param   object  $record  A JTable object.
 	 *
 	 * @return  boolean  True if allowed to delete the record. Defaults to the permission set in the component.
 	 * @since   3.2
 	 */
-	protected function canDelete($record)
+	protected function canEdit($record)
 	{
 		if (!empty($record->ucm_type_id))
 		{
@@ -79,7 +80,6 @@ class ContenthistoryModelHistory extends JModelList
 	 */
 	public function delete(&$pks)
 	{
-		$dispatcher = JEventDispatcher::getInstance();
 		$pks = (array) $pks;
 		$table = $this->getTable();
 
@@ -88,7 +88,7 @@ class ContenthistoryModelHistory extends JModelList
 		{
 			if ($table->load($pk))
 			{
-				if ($this->canDelete($table))
+				if ($this->canEdit($table))
 				{
 					if (!$table->delete($pk))
 					{
@@ -99,7 +99,6 @@ class ContenthistoryModelHistory extends JModelList
 				}
 				else
 				{
-
 					// Prune items that you can't change.
 					unset($pks[$i]);
 					$error = $this->getError();
@@ -145,6 +144,63 @@ class ContenthistoryModelHistory extends JModelList
 		return JTable::getInstance($type, $prefix, $config);
 	}
 
+	/**
+	 * Method to toggle on and off the keep forever value for one or more records from content history table.
+	 *
+	 * @param   array  &$pks  An array of record primary keys.
+	 *
+	 * @return  boolean  True if successful, false if an error occurs.
+	 *
+	 * @since   3.2
+	 */
+	public function keep(&$pks)
+	{
+		$pks = (array) $pks;
+		$table = $this->getTable();
+
+		// Iterate the items to delete each one.
+		foreach ($pks as $i => $pk)
+		{
+			if ($table->load($pk))
+			{
+				if ($this->canEdit($table))
+				{
+					$table->keep_forever = $table->keep_forever ? 0 : 1;
+					if (!$table->store())
+					{
+						$this->setError($table->getError());
+						return false;
+					}
+				}
+				else
+				{
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					$error = $this->getError();
+					if ($error)
+					{
+						JLog::add($error, JLog::WARNING, 'jerror');
+						return false;
+					}
+					else
+					{
+						JLog::add(JText::_('COM_CONTENTHISTORY_ERROR_KEEP_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+						return false;
+					}
+				}
+			}
+			else
+			{
+				$this->setError($table->getError());
+				return false;
+			}
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}
 
 	/**
 	 * Method to auto-populate the model state.
@@ -187,11 +243,11 @@ class ContenthistoryModelHistory extends JModelList
 
 		// Select the required fields from the table.
 		$query->select(
-			$this->getState(
-				'list.select',
-				'h.version_id, h.ucm_item_id, h.ucm_type_id, h.version_note, h.save_date, h.editor_user_id,' .
-					'h.character_count, h.sha1_hash, h.version_data'
-			)
+				$this->getState(
+						'list.select',
+						'h.version_id, h.ucm_item_id, h.ucm_type_id, h.version_note, h.save_date, h.editor_user_id,' .
+						'h.character_count, h.sha1_hash, h.version_data, h.keep_forever'
+				)
 		);
 		$query->from($db->quoteName('#__ucm_history') . ' AS h');
 		$query->where($db->quoteName('h.ucm_item_id') . ' = ' . $this->getState('item_id'));
@@ -199,7 +255,7 @@ class ContenthistoryModelHistory extends JModelList
 
 		// Join over the users for the editor
 		$query->select('uc.name AS editor')
-			->join('LEFT', '#__users AS uc ON uc.id = h.editor_user_id');
+		->join('LEFT', '#__users AS uc ON uc.id = h.editor_user_id');
 
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering');

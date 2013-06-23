@@ -147,6 +147,7 @@ class JTableContenthistory extends JTable
 			->from($db->quoteName('#__ucm_history'))
 			->where($db->quoteName('ucm_item_id') . ' = ' . (int) $this->ucm_item_id)
 			->where($db->quoteName('ucm_type_id') . ' = ' . (int) $this->ucm_type_id)
+			->where($db->quoteName('keep_forever') . ' != 1')
 			->order($db->quoteName('save_date') . ' DESC ');
 		$db->setQuery($query, 0, (int) $maxVersions);
 		$idsToSave = $db->loadColumn(0);
@@ -154,12 +155,13 @@ class JTableContenthistory extends JTable
 		// Don't process delete query unless we have at least the maximum allowed versions
 		if (count($idsToSave) == (int) $maxVersions)
 		{
-			// Delete any rows not in our list
+			// Delete any rows not in our list and and not flagged to keep forever.
 			$query = $db->getQuery(true);
 			$query->delete($db->quoteName('#__ucm_history'))
 				->where($db->quoteName('ucm_item_id') . ' = ' . (int) $this->ucm_item_id)
 				->where($db->quoteName('ucm_type_id') . ' = ' . (int) $this->ucm_type_id)
-				->where($db->quoteName('version_id') . ' NOT IN (' . implode(',', $idsToSave) . ')');
+				->where($db->quoteName('version_id') . ' NOT IN (' . implode(',', $idsToSave) . ')')
+				->where($db->quoteName('keep_forever') . ' != 1');
 			$db->setQuery($query);
 			$result = (boolean) $db->execute();
 		}

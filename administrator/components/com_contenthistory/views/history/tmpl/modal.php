@@ -12,6 +12,7 @@ JRequest::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('behavior.tooltip');
+JHtml::_('behavior.multiselect');
 JHtml::_('jquery.framework');
 
 $input = JFactory::getApplication()->input;
@@ -49,22 +50,7 @@ JFactory::getDocument()->addScriptDeclaration("
 				}
 			});
 
-			$('#toolbar-delete').click(function() {
-				var ids = $('input[id*=\'cb\']:checked').map(function(){
-					return $(this).val();
-				}).get();
-				if (ids.length > 0)
-				{
-					// Add delete task to URL
-					$('form#adminForm').attr('action', $('form#adminForm').attr('action') + '&task=history.delete');
-					$('form#adminForm').submit();
-				}
-				else {
-					alert('" . $deleteMessage . "');
-				}
-			});
-
-			$('#toolbar-preview').click(function() {
+		$('#toolbar-preview').click(function() {
 				var windowSizeArray = ['width=800, height=600, resizable=yes, scrollbars=yes'];
 				var ids = $('input[id*=\'cb\']:checked');
 				if (ids.length == 1) {
@@ -112,8 +98,12 @@ JFactory::getDocument()->addScriptDeclaration("
 	<button id="toolbar-compare" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE_DESC'); ?>"
 		data-url="<?php echo JRoute::_('index.php?option=com_contenthistory&view=compare&layout=compare&tmpl=component&' . JSession::getFormToken() . '=1');?>">
 		<span class="icon-zoom-in"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_COMPARE'); ?></button>
-	<button id="toolbar-delete" type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_DELETE_DESC'); ?>">
-		<span class="icon-delete"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_DELETE'); ?></button>
+    <button onclick="if (document.adminForm.boxchecked.value==0){alert('<?php echo $deleteMessage; ?>');}else{ Joomla.submitbutton('history.keep')}" class="btn hasTooltip"
+    	title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_KEEP_DESC'); ?>">
+    	<span class="icon-lock"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_KEEP'); ?></button>
+    <button onclick="if (document.adminForm.boxchecked.value==0){alert('<?php echo $deleteMessage; ?>');}else{ Joomla.submitbutton('history.delete')}" class="btn hasTooltip"
+    	title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_DELETE_DESC'); ?>">
+    	<span class="icon-delete"></span><?php echo '&#160;' . JText::_('COM_CONTENTHISTORY_BUTTON_DELETE'); ?></button>
 </div>
 <div class="clearfix"></div>
 <form action="<?php echo JRoute::_($formUrl);?>" method="post" name="adminForm" id="adminForm">
@@ -129,6 +119,9 @@ JFactory::getDocument()->addScriptDeclaration("
 				</th>
 				<th width="15%">
 					<?php echo JText::_('COM_CONTENTHISTORY_VERSION_NOTE'); ?>
+				</th>
+				<th width="10%">
+					<?php echo JText::_('COM_CONTENTHISTORY_KEEP_VERSION'); ?>
 				</th>
 				<th width="15%">
 					<?php echo JText::_('JAUTHOR'); ?>
@@ -164,10 +157,24 @@ JFactory::getDocument()->addScriptDeclaration("
 				<td align="left">
 					<?php echo htmlspecialchars($item->version_note); ?>
 				</td>
+				<td class="center">
+					<?php if ($item->keep_forever) : ?>
+						<a class="btn btn-micro active" rel="tooltip" href="javascript:void(0);"
+							onclick="return listItemTask('cb<?php echo $i; ?>','history.keep')"
+							data-original-title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_KEEP_TOGGLE_OFF'); ?>">
+							<?php echo JText::_('JYES'); ?>&nbsp;<i class="icon-lock"></i>
+					<?php else : ?>
+						<a class="btn btn-micro active" rel="tooltip" href="javascript:void(0);"
+							onclick="return listItemTask('cb<?php echo $i; ?>','history.keep')"
+							data-original-title="<?php echo JText::_('COM_CONTENTHISTORY_BUTTON_KEEP_TOGGLE_ON'); ?>">
+							<?php echo JText::_('JNO'); ?>
+
+					<?php endif; ?>
+				</td>
 				<td align="left">
 					<?php echo htmlspecialchars($item->editor); ?>
 				</td>
-				<td align="right">
+				<td class="center">
 					<?php echo number_format((int) $item->character_count, 0, '.', ','); ?>
 				</td>
 			</tr>
@@ -177,6 +184,7 @@ JFactory::getDocument()->addScriptDeclaration("
 	</table>
 	<div>
 		<?php echo JHtml::_('form.token'); ?>
+		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="boxchecked" value="0" />
 	</div>
 	</div>
