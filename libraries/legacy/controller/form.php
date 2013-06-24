@@ -189,16 +189,20 @@ class JControllerForm extends JControllerLegacy
 	 */
 	public function autosave($key = null, $urlVar = null)
 	{
-		JLoader::register('JJsonResponse', JPATH_ADMINISTRATOR . 'com_languages/helpers/jsonresponse.php');
+		JLoader::register('JJsonResponse', JPATH_ADMINISTRATOR . '/components/com_languages/helpers/jsonresponse.php');
+		$object = new stdClass();
 
 		if ($this->save($key, $urlVar))
 		{
-			echo json_encode(array('message' => 'Save successful'));
+			$object->key = $key;
+			$object->context = $this->context;
+			$response = new JJsonResponse($object, 'Item saved');
 		}
 		else
 		{
-			echo json_encode(array('message' => 'Save not successful'));
+			$response = new JJsonResponse(false, 'Item not saved');
 		}
+		echo $response;
 		JFactory::getApplication()->close();
 
 	}
@@ -767,6 +771,7 @@ class JControllerForm extends JControllerLegacy
 		switch ($task)
 		{
 			case 'apply':
+			case 'autosave':
 				// Set the record data in the session.
 				$recordId = $model->getState($this->context . '.id');
 				$this->holdEditId($context, $recordId);

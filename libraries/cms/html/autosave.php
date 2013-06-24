@@ -45,15 +45,20 @@ abstract class JHtmlAutosave
 			(function ($){
 				$(document).ready(function (){
 					$('input[name=task]').val('" . $task . "');
-					var myAutoSave = setTimeout(function(){autosave()}, " . (int) ($seconds * 1000) . ");
+					var myAutoSave = setInterval(function(){autosave()}, " . (int) ($seconds * 1000) . ");
 
 					function autosave()
 					{
+						var elements = $('form[name=adminForm]');
+						var editor = $('iframe').contents().find('#tinymce');
+						var editText = $('#jform_misc');
+						editText.html(editor.html());
+						var myData = elements.serialize();
 						$.ajax({
 						url : '" . $url . "',
 						type : 'POST',
 						dataType : 'json',
-						data: $('form[name=adminForm]').serialize(),
+						data: myData,
 						success : onDataReceived,
 						error: onError
 						});
