@@ -193,12 +193,13 @@ class JControllerForm extends JControllerLegacy
 
 		if ($this->save($key, $urlVar))
 		{
-			echo new JJsonResponse('Save successful');
+			echo json_encode(array('message' => 'Save successful'));
 		}
 		else
 		{
-			echo new JJsonResponse('Save not successful');
+			echo json_encode(array('message' => 'Save not successful'));
 		}
+		JFactory::getApplication()->close();
 
 	}
 

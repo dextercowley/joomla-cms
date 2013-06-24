@@ -33,7 +33,7 @@ abstract class JHtmlAutosave
 	 *
 	 * @since   3.2
 	 */
-	public static function autosave($seconds, $url)
+	public static function autosave($seconds, $url, $task)
 	{
 		// Only load once
 		if (isset(self::$loaded[__METHOD__]))
@@ -44,17 +44,20 @@ abstract class JHtmlAutosave
 		JFactory::getDocument()->addScriptDeclaration("
 			(function ($){
 				$(document).ready(function (){
-					var myAutoSave = setInterval(function(){autosave()}, " . (int) ($seconds * 1000) . ");
+					$('input[name=task]').val('" . $task . "');
+					var myAutoSave = setTimeout(function(){autosave()}, " . (int) ($seconds * 1000) . ");
 
 					function autosave()
 					{
 						$.ajax({
 						url : '" . $url . "',
-						type : 'post',
+						type : 'POST',
 						dataType : 'json',
+						data: $('form[name=adminForm]').serialize(),
 						success : onDataReceived,
 						error: onError
 						});
+						return false;
 
 						function onDataReceived(data)
 						{
@@ -62,7 +65,7 @@ abstract class JHtmlAutosave
 						};
 						function onError(data)
 						{
-							alert('error: ' + data.responseText);
+							alert('error: '+ data.responseText);
 						}
 					}
 				});
