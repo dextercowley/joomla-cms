@@ -178,6 +178,32 @@ class JControllerForm extends JControllerLegacy
 	}
 
 	/**
+	 * Method to auto save a record using an ajax request. Echos a JSON string to indicate success or failure.
+	 *
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+	 *
+	 * @return  void
+	 *
+	 * @since   12.2
+	 */
+	public function autosave($key = null, $urlVar = null)
+	{
+		JLoader::register('JJsonResponse', JPATH_ADMINISTRATOR . 'com_languages/helpers/jsonresponse.php');
+
+		if ($this->save($key, $urlVar))
+		{
+			echo new JJsonResponse('Save successful');
+		}
+		else
+		{
+			echo new JJsonResponse('Save not successful');
+		}
+
+	}
+
+
+	/**
 	 * Method to check if you can add a new record.
 	 *
 	 * Extended classes can override this if necessary.
