@@ -187,6 +187,28 @@ class JTableCategory extends JTableNested
 	}
 
 	/**
+	 * Override parent delete method to process content history
+	 *
+	 * @param   integer  $pk        The primary key of the node to delete.
+	 * @param   boolean  $children  True to delete child nodes, false to move them up a level.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.1
+	 * @throws  UnexpectedValueException
+	 */
+	public function delete($pk = null, $children = true)
+	{
+		$result = parent::delete($pk);
+		if (JComponentHelper::getParams($input->getCmd('extension', 'com_content'))->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory('com_content.category');
+			$result = $result && $contenthistoryHelper->deleteHistory($this);
+		}
+		return $result;
+	}
+
+	/**
 	 * Overridden JTable::store to set created/modified and user id.
 	 *
 	 * @param   boolean  $updateNulls  True to update fields even if they are null.
@@ -215,7 +237,6 @@ class JTableCategory extends JTableNested
 
 		// Verify that the alias is unique
 		$table = JTable::getInstance('Category', 'JTable', array('dbo' => $this->getDbo()));
-
 		if ($table->load(array('alias' => $this->alias, 'parent_id' => $this->parent_id, 'extension' => $this->extension))
 			&& ($table->id != $this->id || $this->id == 0))
 		{
@@ -224,6 +245,14 @@ class JTableCategory extends JTableNested
 			return false;
 		}
 
-		return parent::store($updateNulls);
+		$result = parent::store($updateNulls);
+
+		if (JComponentHelper::getParams($this->extension)->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory($this->extension . '.category');
+			$result = $result && $contenthistoryHelper->store($this);
+		}
+
+		return $result;
 	}
 }

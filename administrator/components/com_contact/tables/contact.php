@@ -56,9 +56,30 @@ class ContactTableContact extends JTable
 	}
 
 	/**
+	 * Override parent delete method to delete version history.
+	 *
+	 * @param   integer  $pk  Primary key to delete.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.2
+	 * @throws  UnexpectedValueException
+	 */
+	public function delete($pk = null)
+	{
+		$result = parent::delete($pk);
+		if (JComponentHelper::getParams('com_contact')->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory('com_contact.contact');
+			$result = $result && $contenthistoryHelper->deleteHistory($this);
+		}
+		return $result;
+	}
+
+	/**
 	 * Stores a contact
 	 *
-	 * @param   boolean  True to update fields even if they are null.
+	 * @param   boolean	True to update fields even if they are null.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *
@@ -130,7 +151,15 @@ class ContactTableContact extends JTable
 			return false;
 		}
 
-		return parent::store($updateNulls);
+		$result = parent::store($updateNulls);
+
+		if (JComponentHelper::getParams('com_contact')->get('save_history', 0))
+		{
+			$contenthistoryHelper = new JHelperContenthistory('com_contact.contact');
+			$result = $result && $contenthistoryHelper->store($this);
+		}
+
+		return $result;
 	}
 
 	/**
