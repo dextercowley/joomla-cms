@@ -194,12 +194,18 @@ class JControllerForm extends JControllerLegacy
 
 		if ($this->save($key, $urlVar))
 		{
+			JFactory::getApplication()->enqueueMessage('Auto save item successful.');
 			$object->key = $key;
 			$object->context = $this->context;
+			$object->type = 'alert';
+			$object->item = 'Item saved: ' . $key;
 			$response = new JJsonResponse($object, 'Item saved');
 		}
 		else
 		{
+			$object->key = $key;
+			$object->type = 'alert';
+			$object->item = 'Item not saved: ' . $key;
 			$response = new JJsonResponse(false, 'Item not saved');
 		}
 		echo $response;

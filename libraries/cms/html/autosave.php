@@ -40,12 +40,12 @@ abstract class JHtmlAutosave
 		{
 			return;
 		}
-
+		JHtml::_('behavior.framework');
 		JFactory::getDocument()->addScriptDeclaration("
 			(function ($){
 				$(document).ready(function (){
 					$('input[name=task]').val('" . $task . "');
-					var myAutoSave = setInterval(function(){autosave()}, " . (int) ($seconds * 1000) . ");
+					var myAutoSave = setTimeout(function(){autosave()}, " . (int) ($seconds * 1000) . ");
 
 					function autosave()
 					{
@@ -66,11 +66,11 @@ abstract class JHtmlAutosave
 
 						function onDataReceived(data)
 						{
-							alert('success: ' + data.responseText);
-						};
+							Joomla.renderMessages(new Array(data));
+						}
 						function onError(data)
 						{
-							alert('error: '+ data.responseText);
+							Joomla.renderMessages(new Array(data));
 						}
 					}
 				});
