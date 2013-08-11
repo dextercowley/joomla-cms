@@ -200,9 +200,10 @@ class JTableCategory extends JTableNested
 	public function delete($pk = null, $children = true)
 	{
 		$result = parent::delete($pk);
-		if (JComponentHelper::getParams(JFactory::getApplication()->input->getCmd('extension', 'com_content'))->get('save_history', 0))
+		$extension = JFactory::getApplication()->input->getCmd('extension', 'com_content');
+		if (JComponentHelper::getParams($extension)->get('save_history', 0))
 		{
-			$contenthistoryHelper = new JHelperContenthistory('com_content.category');
+			$contenthistoryHelper = new JHelperContenthistory($extension . '.category');
 			$result = $result && $contenthistoryHelper->deleteHistory($this);
 		}
 		return $result;
