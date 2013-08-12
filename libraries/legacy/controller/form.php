@@ -191,15 +191,15 @@ class JControllerForm extends JControllerLegacy
 	{
 		if ($this->save($key, $urlVar))
 		{
-			JFactory::getApplication()->enqueueMessage('Auto save item successful.', 'success');
-			echo new JResponseJson();
+			$message = JText::sprintf('JGLOBAL_AUTO_SAVE_SUCCESS', (string) new JDate);
+			JFactory::getApplication()->enqueueMessage($message, 'success');
 		}
 		else
 		{
-			JFactory::getApplication()->enqueueMessage('Auto save item not successful!', 'warning');
-			echo new JResponseJson();
-
+			$message = JText::_('JGLOBAL_AUTO_SAVE_FAIL');
+			JFactory::getApplication()->enqueueMessage($message, 'notice');
 		}
+		echo new JResponseJson();
 		JFactory::getApplication()->close();
 	}
 
