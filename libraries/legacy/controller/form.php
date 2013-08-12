@@ -189,28 +189,18 @@ class JControllerForm extends JControllerLegacy
 	 */
 	public function autosave($key = null, $urlVar = null)
 	{
-		JLoader::register('JJsonResponse', JPATH_ADMINISTRATOR . '/components/com_languages/helpers/jsonresponse.php');
-		$object = new stdClass();
-
 		if ($this->save($key, $urlVar))
 		{
-			JFactory::getApplication()->enqueueMessage('Auto save item successful.');
-			$object->key = $key;
-			$object->context = $this->context;
-			$object->type = 'alert';
-			$object->item = 'Item saved: ' . $key;
-			$response = new JJsonResponse($object, 'Item saved');
+			JFactory::getApplication()->enqueueMessage('Auto save item successful.', 'success');
+			echo new JResponseJson();
 		}
 		else
 		{
-			$object->key = $key;
-			$object->type = 'alert';
-			$object->item = 'Item not saved: ' . $key;
-			$response = new JJsonResponse(false, 'Item not saved');
-		}
-		echo $response;
-		JFactory::getApplication()->close();
+			JFactory::getApplication()->enqueueMessage('Auto save item not successful!', 'warning');
+			echo new JResponseJson();
 
+		}
+		JFactory::getApplication()->close();
 	}
 
 

@@ -66,11 +66,11 @@ abstract class JHtmlAutosave
 
 						function onDataReceived(data)
 						{
-							Joomla.renderMessages(new Array(data));
+							Joomla.renderMessages(data.messages);
 						}
 						function onError(data)
 						{
-							Joomla.renderMessages(new Array(data));
+							Joomla.renderMessages(data.messages);
 						}
 					}
 				});
