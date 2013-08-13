@@ -14,7 +14,11 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('autosave.autosave', 5, JRoute::_('index.php?option=com_contact') . '&layout=edit&id='.(int) $this->item->id,  'contact.autosave');
+$autoSaveTime = $this->state->params->get('auto_save_time', 0);
+if ($autoSaveTime)
+{
+	JHtml::_('autosave.autosave', $autoSaveTime, JRoute::_('index.php?option=com_contact') . '&layout=edit&id='.(int) $this->item->id,  'contact.autosave');
+}
 
 $app = JFactory::getApplication();
 $input = $app->input;

@@ -33,7 +33,7 @@ abstract class JHtmlAutosave
 	 *
 	 * @since   3.2
 	 */
-	public static function autosave($seconds, $url, $task)
+	public static function autosave($minutes, $url, $task)
 	{
 		// Only load once
 		if (isset(self::$loaded[__METHOD__]))
@@ -45,7 +45,7 @@ abstract class JHtmlAutosave
 			(function ($){
 				$(document).ready(function (){
 					$('input[name=task]').val('" . $task . "');
-					var myAutoSave = setInterval(function(){autosave()}, " . (int) ($seconds * 1000) . ");
+					var myAutoSave = setInterval(function(){autosave()}, " . (int) ($minutes * 1000 * 60) . ");
 
 					function autosave()
 					{
