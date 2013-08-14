@@ -15,6 +15,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('autosave.autosave', 'jform_description', JRoute::_('index.php?option=com_newsfeeds') . '&layout=edit&id=' . (int) $this->item->id,  'newsfeed.autosave');
 
 $app = JFactory::getApplication();
 $input = $app->input;

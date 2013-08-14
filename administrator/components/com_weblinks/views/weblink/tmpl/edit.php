@@ -13,6 +13,7 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('autosave.autosave', 'jform_description', JRoute::_('index.php?option=com_weblinks') . '&layout=edit&id=' . (int) $this->item->id,  'weblink.autosave');
 
 ?>
 <script type="text/javascript">
