@@ -14,16 +14,6 @@
 			extension="com_contact"
 			view="contact"
 		/>
-		
-		<field
-			name="auto_save_time"
-			type="text"
-			default="5"
-			label="JGLOBAL_FIELD_AUTO_SAVE_TIME_LABEL"
-			description="JGLOBAL_FIELD_AUTO_SAVE_TIME_DESC"
-			filter="integer"
-			size="6" 
-		/>
 
 		<field name="show_contact_category"
 			type="list"

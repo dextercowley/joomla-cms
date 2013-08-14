@@ -609,6 +609,18 @@
 			description="COM_CONFIG_FIELD_DEFAULT_EDITOR_DESC"
 			required="true"
 			filter="cmd" />
+			
+		<field
+			name="auto_save"
+			type="radio"
+			class="btn-group"
+			default="0"
+			label="COM_CONFIG_FIELD_AUTO_SAVE_LABEL"
+			description="COM_CONFIG_FIELD_AUTO_SAVE_DESC"
+			filter="integer">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 
 		<field
 			name="captcha"

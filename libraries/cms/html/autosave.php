@@ -25,34 +25,49 @@ abstract class JHtmlAutosave
 	protected static $loaded = array();
 
 	/**
-	 * Method to load the Barchart script to display a bar chart using jQuery and jqPlot
+	 * Method to load the script to save the form using jQuery AJAX
 	 *
-	 * @param   integer  $seconds     Interval in seconds to perform auto save
+	 * @param   string  $editorId   HTML id for the editor element on the page
+	 * @param   string  $url        URL for the item being edited
+	 * @param   string  $task       task for the auto save for this component
 	 *
 	 * @return  void
 	 *
 	 * @since   3.2
 	 */
-	public static function autosave($minutes, $url, $task)
+	public static function autosave($editorId, $url, $task)
 	{
 		// Only load once
 		if (isset(self::$loaded[__METHOD__]))
 		{
 			return;
 		}
+
+		// Only run if auto save is enabled globally and for this user
+		$user = JFactory::getUser();
+		$autoSave = JFactory::getApplication()->getCfg('auto_save', 0);
+		$autoSaveMinutes = $user->getParam('auto_save_time', 0);
+		if (!$autoSave || !$autoSaveMinutes)
+		{
+			return;
+		}
+
+		$getContentMethod = JFactory::getEditor()->getContent($editorId);
+
 		JHtml::_('behavior.framework');
 		JFactory::getDocument()->addScriptDeclaration("
 			(function ($){
 				$(document).ready(function (){
 					$('input[name=task]').val('" . $task . "');
-					var myAutoSave = setInterval(function(){autosave()}, " . (int) ($minutes * 1000 * 60) . ");
+					var myAutoSave = setInterval(function(){autosave()}, " . (int) ($autoSaveMinutes * 1000 * 60) . ");
 
 					function autosave()
 					{
 						var elements = $('form[name=adminForm]');
 						var editor = $('iframe').contents().find('#tinymce');
-						var editText = $('#jform_misc');
-						editText.html(editor.html());
+						var editText = $('#" . $editorId . "');
+						var editorContent = " . $getContentMethod . "
+						editText.html(editorContent);
 						var myData = elements.serialize();
 						$.ajax({
 						url : '" . $url . "',
