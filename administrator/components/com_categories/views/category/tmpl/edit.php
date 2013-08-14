@@ -18,6 +18,7 @@ $input = $app->input;
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('autosave.autosave', 'jform_description', JRoute::_('index.php?option=com_categories') . '&extension=' . $input->getCmd('extension', 'com_content') . '&layout=edit&id='.(int) $this->item->id,  'category.autosave');
 
 ?>
 

@@ -59,7 +59,9 @@ abstract class JHtmlAutosave
 			(function ($){
 				$(document).ready(function (){
 					$('input[name=task]').val('" . $task . "');
-					var myAutoSave = setInterval(function(){autosave()}, " . (int) ($autoSaveMinutes * 1000 * 60) . ");
+
+				    var myAutoSave = setInterval(function(){autosave()}, " . (int) ($autoSaveMinutes * 1000 * 60) . ");
+				//	var myAutoSave = setTimeout(function(){autosave()}, " . (int) ($autoSaveMinutes * 1000 * 10) . ");
 
 					function autosave()
 					{
