@@ -196,7 +196,7 @@ class JControllerForm extends JControllerLegacy
 		}
 		else
 		{
-			$message = JText::_('JGLOBAL_AUTO_SAVE_FAIL');
+			$message = JText::_('JGLOBAL_AUTO_SAVE_FAIL') . $this->message;
 			JFactory::getApplication()->enqueueMessage($message, 'notice');
 		}
 		echo new JResponseJson();

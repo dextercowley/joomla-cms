@@ -61,7 +61,10 @@ abstract class JHtmlAutosave
 					$('input[name=task]').val('" . $task . "');
 
 				    var myAutoSave = setInterval(function(){autosave()}, " . (int) ($autoSaveMinutes * 1000 * 60) . ");
-				//	var myAutoSave = setTimeout(function(){autosave()}, " . (int) ($autoSaveMinutes * 1000 * 10) . ");
+
+				    // Comment the previous line and uncomment this line to test with short timeouts
+				    // Use setTimeout to just do the save once
+					// var myAutoSave = setTimeout(function(){autosave()}, " . (int) ($autoSaveMinutes * 1000 * 10) . ");
 
 					function autosave()
 					{
