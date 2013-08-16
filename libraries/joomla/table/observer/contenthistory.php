@@ -22,9 +22,9 @@ class JTableObserverContenthistory extends JTableObserver
 	/**
 	 * Helper object for storing and deleting version history information associated with this table observer
 	 *
-	 * @var  JHelperTags
+	 * @var  JHelperContenthistory
 	 */
-	protected $contentHistoryHelper;
+	protected $contenthistoryHelper;
 
 	/**
 	 * The pattern for this table's TypeAlias
@@ -36,7 +36,7 @@ class JTableObserverContenthistory extends JTableObserver
 	 * Not public, so marking private and deprecated, but needed internally in parseTypeAlias for
 	 * PHP < 5.4.0 as it's not passing context $this to closure function.
 	 *
-	 * @var JTableObserverTags
+	 * @var JTableObserverContenthistory
 	 * @deprecated Never use this
 	 * @private
 	 */
@@ -58,7 +58,7 @@ class JTableObserverContenthistory extends JTableObserver
 
 		$observer = new self($observableObject);
 
-		$observer->contentHistoryHelper = new JHelperContenthistory($typeAlias);
+		$observer->contenthistoryHelper = new JHelperContenthistory($typeAlias);
 		$observer->typeAliasPattern = $typeAlias;
 
 		return $observer;
@@ -66,7 +66,6 @@ class JTableObserverContenthistory extends JTableObserver
 
 	/**
 	 * Post-processor for $table->store($updateNulls)
-	 * You can change optional params newTags and replaceTags of tagsHelper with method setNewTagsToAdd
 	 *
 	 * @param   boolean  &$result  The result of the load
 	 *
@@ -76,11 +75,11 @@ class JTableObserverContenthistory extends JTableObserver
 	{
 		if ($result)
 		{
-			$result = $this->historyHelper->postStoreProcess($this->table);
-
-			// Restore default values for the optional params:
-			$this->newTags = array();
-			$this->replaceTags = true;
+			$aliasParts = explode('.', $this->contenthistoryHelper->typeAlias);
+			if (JComponentHelper::getParams($aliasParts[0])->get('save_history', 0))
+			{
+				$this->contenthistoryHelper->store($this->table);
+			}
 		}
 	}
 
@@ -95,29 +94,18 @@ class JTableObserverContenthistory extends JTableObserver
 	 */
 	public function onBeforeDelete($pk)
 	{
-		$this->parseTypeAlias();
-		$this->tagsHelper->deleteTagData($this->table, $pk);
-	}
-
-	/**
-	 * Sets the new tags to be added/replaced to the table row
-	 *
-	 * @param   array    $newTags      New tags to be added or replaced
-	 * @param   boolean  $replaceTags  Replace tags (true) or add them (false)
-	 *
-	 * @return  boolean
-	 */
-	public function setNewTags($newTags, $replaceTags)
-	{
-		$this->parseTypeAlias();
-
-		return $this->tagsHelper->postStoreProcess($this->table, $newTags, $replaceTags);
+		$aliasParts = explode('.', $this->contenthistoryHelper->typeAlias);
+		if (JComponentHelper::getParams($aliasParts[0])->get('save_history', 0))
+		{
+			$this->parseTypeAlias();
+			$this->contenthistoryHelper->deleteHistory($this->table);
+		}
 	}
 
 	/**
 	 * Internal method
 	 * Parses a TypeAlias of the form "{variableName}.type", replacing {variableName} with table-instance variables variableName
-	 * Storing result into $this->tagsHelper->typeAlias
+	 * Storing result into $this->contenthistoryHelper->typeAlias
 	 *
 	 * @return  void
 	 */
@@ -126,10 +114,10 @@ class JTableObserverContenthistory extends JTableObserver
 		// Needed for PHP < 5.4.0 as it's not passing context $this to closure function
 		static::$_myTableForPregreplaceOnly = $this->table;
 
-		$this->tagsHelper->typeAlias = preg_replace_callback('/{([^}]+)}/',
+		$this->contenthistoryHelper->typeAlias = preg_replace_callback('/{([^}]+)}/',
 			function($matches)
 			{
-				return JTableObserverTags::$_myTableForPregreplaceOnly->{$matches[1]};
+				return JTableObserverContenthistory::$_myTableForPregreplaceOnly->{$matches[1]};
 			},
 			$this->typeAliasPattern
 		);
