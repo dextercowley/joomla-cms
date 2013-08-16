@@ -66,3 +66,6 @@ JObserverMapper::addObserverClassToClass('JTableObserverTags', 'ContactTableCont
 JObserverMapper::addObserverClassToClass('JTableObserverTags', 'NewsfeedsTableNewsfeed', array('typeAlias' => 'com_newsfeeds.newsfeed'));
 JObserverMapper::addObserverClassToClass('JTableObserverTags', 'WeblinksTableWeblink', array('typeAlias' => 'com_weblinks.weblink'));
 JObserverMapper::addObserverClassToClass('JTableObserverTags', 'JTableCategory', array('typeAlias' => '{extension}.category'));
+
+// Register Observers for Version History
+JObserverMapper::addObserverClassToClass('JTableObserverHistory', 'ContactTableContact', array('typeAlias' => 'com_contact.contact'));
