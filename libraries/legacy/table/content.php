@@ -244,27 +244,6 @@ class JTableContent extends JTable
 	}
 
 	/**
-	 * Override parent delete method to delete version history.
-	 *
-	 * @param   integer  $pk  Primary key to delete.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   3.1
-	 * @throws  UnexpectedValueException
-	 */
-	public function delete($pk = null)
-	{
-		$result = parent::delete($pk);
-		if (JComponentHelper::getParams('com_content')->get('save_history', 0))
-		{
-			$contenthistoryHelper = new JHelperContenthistory('com_content.article');
-			$result = $result && $contenthistoryHelper->deleteHistory($this);
-		}
-		return $result;
-	}
-
-	/**
 	 * Overrides JTable::store to set modified data and user id.
 	 *
 	 * @param   boolean  $updateNulls  True to update fields even if they are null.
@@ -301,6 +280,7 @@ class JTableContent extends JTable
 
 		// Verify that the alias is unique
 		$table = JTable::getInstance('Content', 'JTable');
+
 		if ($table->load(array('alias' => $this->alias, 'catid' => $this->catid)) && ($table->id != $this->id || $this->id == 0))
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_ARTICLE_UNIQUE_ALIAS'));
@@ -308,15 +288,7 @@ class JTableContent extends JTable
 			return false;
 		}
 
-		$result = parent::store($updateNulls);
-
-		if (JComponentHelper::getParams('com_content')->get('save_history', 0))
-		{
-			$contenthistoryHelper = new JHelperContenthistory('com_content.article');
-			$result = $result && $contenthistoryHelper->store($this);
-		}
-
-		return $result;
+		return parent::store($updateNulls);
 	}
 
 	/**
