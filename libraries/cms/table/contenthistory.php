@@ -99,10 +99,14 @@ class JTableContenthistory extends JTable
 				$object->$name = (is_int($value) || is_bool($value)) ? (string) $value : $value;
 			}
 		}
-		// Work around empty publish_down value
+		// Work around empty publish_up, publish_down values
 		if (isset($object->publish_down))
 		{
 			$object->publish_down = (int) $object->publish_down;
+		}
+		if (isset($object->publish_up))
+		{
+			$object->publish_up = (int) $object->publish_up;
 		}
 		return sha1(json_encode($object));
 	}
