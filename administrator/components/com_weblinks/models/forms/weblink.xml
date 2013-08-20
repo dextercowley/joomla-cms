@@ -147,7 +147,7 @@
 			class="inputbox" size="20" />
 	</fieldset>
 
-	<fields name="params">
+	<fields name="params" label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS">
 		<fieldset name="jbasic" label="COM_WEBLINKS_FIELDSET_OPTIONS">
 			<field name="target" type="list" default=""
 				label="COM_WEBLINKS_FIELD_TARGET_LABEL" description="COM_WEBLINKS_FIELD_TARGET_DESC"
