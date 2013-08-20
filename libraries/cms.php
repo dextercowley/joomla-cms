@@ -72,4 +72,4 @@ JObserverMapper::addObserverClassToClass('JTableObserverContenthistory', 'Contac
 JObserverMapper::addObserverClassToClass('JTableObserverContenthistory', 'JTableContent', array('typeAlias' => 'com_content.article'));
 JObserverMapper::addObserverClassToClass('JTableObserverContenthistory', 'JTableCategory', array('typeAlias' => '{extension}.category'));
 JObserverMapper::addObserverClassToClass('JTableObserverContenthistory', 'NewsfeedsTableNewsfeed', array('typeAlias' => 'com_newsfeeds.newsfeed'));
-
+JObserverMapper::addObserverClassToClass('JTableObserverContenthistory', 'WeblinksTableWeblink', array('typeAlias' => 'com_weblinks.weblink'));
